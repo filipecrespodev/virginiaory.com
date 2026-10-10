@@ -1,0 +1,99 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import Lightbox from './Lightbox.astro';
+
+type Block = CollectionEntry<'projects'>['data']['blocks'][number];
+type Leaf = Exclude<Block, { type: 'columns' }>;
+
+interface Props {
+  blocks: (Block | Leaf)[];
+  /** Smaller body copy, used for long text such as the About page. */
+  smallText?: boolean;
+  title: string;
+  /** Nested inside a `columns` block: the lightbox is already on the page. */
+  nested?: boolean;
+}
+
+const { blocks, smallText = false, title, nested = false } = Astro.props;
+
+// Base row height of the justified grid, same as Adobe Portfolio.
+const ROW = 260;
+const WIDTHS = [480, 800, 1200, 1600, 2000, 2560];
+const full = async (src: ImageMetadata) =>
+  (await getImage({ src, width: Math.min(src.width, 2560), format: 'webp', quality: 85 })).src;
+const widthStyle = (w?: number) => (w ? `width:${w}%` : undefined);
+---
+
+{
+  blocks.map(async (block, i) => {
+    if (block.type === 'image') {
+      return (
+        <div class="module image" style={widthStyle(block.width)}>
+          <a href={await full(block.src)} class="lightbox-trigger" data-lightbox>
+            <Image
+              src={block.src}
+              alt={title}
+              widths={WIDTHS.filter((w) => w <= block.src.width)}
+              sizes="(max-width: 768px) 100vw, min(1150px, 72vw)"
+              format="webp"
+              quality={85}
+              loading={i === 0 ? 'eager' : 'lazy'}
+            />
+          </a>
+        </div>
+      );
+    }
+    if (block.type === 'grid') {
+      return (
+        <div class="module grid" style={widthStyle(block.width)}>
+          <div class="grid-main">
+            {block.images.map(async (img) => {
+              const grow = (ROW * img.width) / img.height;
+              return (
+                <a
+                  href={await full(img)}
+                  class="grid-item lightbox-trigger"
+                  data-lightbox
+                  style={`width:${grow}px;flex-grow:${grow}`}
+                >
+                  <i style={`padding-bottom:${(img.height / img.width) * 100}%`} />
+                  <Image
+                    src={img}
+                    alt={title}
+                    widths={WIDTHS.filter((w) => w <= img.width)}
+                    sizes={`(max-width: 540px) 100vw, min(${Math.round(grow * 2.5)}px, 100vw)`}
+                    format="webp"
+                    quality={85}
+                    loading="lazy"
+                  />
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+    if (block.type === 'columns') {
+      return (
+        <div class="module columns">
+          {block.columns.map((col) => (
+            <div class="column" style={`flex:${col.flex}`}>
+              <Astro.self blocks={col.blocks} title={title} smallText={smallText} nested />
+            </div>
+          ))}
+        </div>
+      );
+    }
+    if (block.type === 'text') {
+      return (
+        <div class="module text">
+          <div class:list={['rich-text', { small: smallText }]} set:html={block.html} />
+        </div>
+      );
+    }
+    return <div class="module embed" set:html={block.html} />;
+  })
+}
+
+{!nested && <Lightbox />}

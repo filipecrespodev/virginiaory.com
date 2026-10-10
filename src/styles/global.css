@@ -1,0 +1,835 @@
+/*
+ * Recreates the Adobe Portfolio theme used on virginiaory.com.
+ * Museo Slab (Adobe Fonts) -> Roboto Slab (free, self-hosted lookalike).
+ * Breakpoints match the original: 768px (tablet) and 540px (phone).
+ */
+:root {
+  --font-sans: 'Roboto Slab', 'Museo Slab', Georgia, serif;
+  --font-serif: var(--font-sans);
+  --ink: #444444;
+  --muted: #888888;
+  --faint: #bbbbbb;
+  --icon: #999999;
+  --icon-hover: #666666;
+  --header-bg: #f3f3f2;
+  --footer: #dddddd;
+  --placeholder: rgba(0, 0, 0, 0.03);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  background: #fff;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-sans);
+  font-weight: 300;
+}
+
+img {
+  vertical-align: top;
+  border: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ---------- Layout ---------- */
+
+.site-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.site-content {
+  margin: 0 5%;
+}
+
+/* ---------- Header ---------- */
+
+/* Full-width grey band; the logo sits top-left, scaled to the band's height. */
+.site-header {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  background: var(--header-bg);
+  padding: 70px 0 88px;
+}
+
+.logo-container {
+  position: absolute;
+  inset: 0 auto 0 0;
+}
+
+.logo {
+  display: block;
+  height: 100%;
+}
+
+.logo img {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+.nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0 0 31.5%;
+}
+
+.nav > a,
+.responsive-nav nav a {
+  color: var(--faint);
+  font-weight: 300;
+  transition: color 0.15s ease;
+}
+
+.nav > a {
+  font-size: 40px;
+  line-height: 40px;
+  padding-right: 50px;
+}
+
+.nav > a:last-child {
+  padding-right: 0;
+}
+
+.nav > a:hover,
+.nav > a.active,
+.responsive-nav nav a:hover,
+.responsive-nav nav a.active {
+  color: var(--ink);
+}
+
+.hamburger {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 30px 5%;
+}
+
+.hamburger i {
+  display: block;
+  width: 24px;
+  height: 2px;
+  margin-bottom: 4px;
+  background: #000;
+}
+
+.hamburger i:last-child {
+  margin-bottom: 0;
+}
+
+.responsive-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  background: var(--header-bg);
+  overflow: auto;
+  padding: 50px 5% 0;
+  text-align: center;
+}
+
+.responsive-nav[hidden] {
+  display: none;
+}
+
+.responsive-nav nav {
+  margin: auto;
+  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+.responsive-nav nav a {
+  font-size: 22px;
+  line-height: 32px;
+  padding-bottom: 30px;
+}
+
+.close-responsive {
+  position: fixed;
+  top: 40px;
+  right: 5%;
+  width: 20px;
+  height: 20px;
+}
+
+.close-responsive::before,
+.close-responsive::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 20px;
+  background: #000;
+  transform: rotate(45deg);
+}
+
+.close-responsive::after {
+  transform: rotate(-45deg);
+}
+
+.show-responsive-nav {
+  overflow: hidden;
+}
+
+/* ---------- Home: project covers ---------- */
+
+.project-covers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 5%;
+  padding-top: 60px;
+}
+
+.project-cover {
+  display: block;
+  width: 30%;
+}
+
+.project-cover .cover {
+  position: relative;
+  padding-bottom: 78.21782%;
+  overflow: hidden;
+  background: var(--placeholder);
+}
+
+.project-cover .cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-cover .cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.project-cover:hover .cover::after,
+.project-cover:focus-visible .cover::after {
+  opacity: 0.15;
+}
+
+.project-cover .details {
+  padding: 8% 0 16.5%;
+  text-align: center;
+}
+
+.project-cover .title {
+  width: 90%;
+  margin: auto;
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 28px;
+  padding-bottom: 10px;
+  white-space: pre-line;
+}
+
+.project-cover .date {
+  color: var(--faint);
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+/* ---------- Pages ---------- */
+
+.page {
+  margin: 0 1%;
+}
+
+.page-header {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 0 70px;
+  text-align: center;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 60px;
+  font-weight: 300;
+  line-height: 70px;
+  padding-bottom: 20px;
+  white-space: pre-line;
+}
+
+.page-header .description {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 24px;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+}
+
+.module {
+  clear: both;
+  margin: 0 auto;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.module.image {
+  width: 80%;
+  padding-bottom: 30px;
+}
+
+.module.image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  background: var(--placeholder);
+}
+
+.module.text {
+  width: 90%;
+  max-width: 800px;
+  padding: 20px 0 40px;
+}
+
+.rich-text p {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 28px;
+  padding-bottom: 25px;
+  text-align: center;
+}
+
+.rich-text p.lead {
+  font-size: 30px;
+  line-height: 1.1;
+  padding-bottom: 20px;
+}
+
+.rich-text a {
+  color: var(--muted);
+  text-decoration: underline;
+}
+
+/* Long-form text (About) is set smaller, as on the original site. */
+.rich-text.small p {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.rich-text.small p.lead {
+  font-size: 30px;
+}
+
+/* Side-by-side columns (About me: portrait + text). */
+.module.columns {
+  display: flex;
+  align-items: flex-start;
+  width: 90%;
+  max-width: 1150px;
+  padding-bottom: 30px;
+}
+
+.module.columns .column {
+  min-width: 0;
+}
+
+.module.columns .module.image {
+  padding-bottom: 0;
+}
+
+.module.columns .module.text {
+  width: 100%;
+  padding: 0 0 0 4%;
+}
+
+.module.embed {
+  width: 100%;
+}
+
+.module.embed iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+}
+
+/* Justified image grid: each item grows proportionally to its aspect ratio. */
+.module.grid {
+  width: 87.5%;
+  padding-bottom: 40px;
+  overflow: hidden;
+}
+
+.grid-main {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -4px;
+}
+
+.grid-item {
+  position: relative;
+  display: block;
+  box-sizing: content-box;
+  border: solid transparent;
+  border-width: 0 4px 8px;
+}
+
+.grid-item i {
+  display: block;
+  background: var(--placeholder);
+}
+
+.grid-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lightbox-trigger {
+  cursor: zoom-in;
+}
+
+/* ---------- Contact form ---------- */
+
+.module.form {
+  width: 90%;
+  max-width: 500px;
+  padding: 50px 0 40px;
+}
+
+.contact-form label {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  padding-bottom: 6px;
+}
+
+.contact-form .form-input {
+  padding-bottom: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  background: #fff;
+}
+
+.contact-form input {
+  height: 42px;
+  line-height: 42px;
+}
+
+.contact-form textarea {
+  height: 132px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #999;
+}
+
+.contact-form .submit-button {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 30px;
+  border-radius: 3px;
+  background: #333;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+
+.contact-form .submit-button:hover {
+  background: #555;
+}
+
+.contact-form .submit-button[disabled] {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+.contact-form .form-error {
+  color: #c00;
+  font-size: 13px;
+  padding-top: 10px;
+}
+
+.contact-form-sent {
+  color: #333;
+  font-size: 18px;
+  line-height: 1.4;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.hp {
+  position: absolute;
+  left: -9999px;
+}
+
+/* ---------- Back to top + footer ---------- */
+
+.back-to-top {
+  clear: both;
+  padding: 60px 0;
+  text-align: center;
+}
+
+.back-to-top a {
+  color: #999999;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.back-to-top a:hover {
+  color: var(--icon-hover);
+}
+
+.back-to-top .arrow {
+  margin-right: 10px;
+}
+
+.site-footer {
+  padding: 60px 0;
+  color: var(--footer);
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #fff;
+}
+
+.lightbox::backdrop {
+  background: #fff;
+}
+
+.lightbox figure {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 70px;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.lightbox button {
+  position: absolute;
+  color: #333;
+  font-size: 34px;
+  line-height: 1;
+  padding: 16px;
+  opacity: 0.6;
+}
+
+.lightbox button:hover {
+  opacity: 1;
+}
+
+.lightbox .lb-close {
+  top: 6px;
+  right: 10px;
+}
+
+.lightbox .lb-prev {
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox .lb-next {
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 768px) {
+  .site-content {
+    margin: 0;
+    padding: 0 5%;
+  }
+
+  /* The logo keeps filling the band's height, as the original's background image does. */
+  .site-header {
+    display: block;
+    height: 80px;
+    padding: 0;
+  }
+
+  .logo-container {
+    right: 0;
+  }
+
+  .logo {
+    display: inline-block;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .project-covers {
+    padding-top: 28px;
+  }
+
+  .project-cover {
+    width: 47.5%;
+  }
+
+  .project-cover .title {
+    font-size: 18px;
+    line-height: 21px;
+    padding-bottom: 8px;
+  }
+
+  .module.columns {
+    width: 100%;
+  }
+
+  .page {
+    margin: 0;
+  }
+
+  .page-header {
+    padding: 38px 5% 28px;
+  }
+
+  .page-header h1 {
+    font-size: 36px;
+    line-height: 42px;
+    padding-bottom: 14px;
+  }
+
+  .page-header .description {
+    font-size: 17px;
+    line-height: 24px;
+  }
+
+  .module.image {
+    width: 100%;
+    padding-bottom: 18px;
+  }
+
+  .module.text {
+    width: 100%;
+    padding: 14px 5% 20px;
+  }
+
+  .module.grid {
+    width: 100% !important;
+  }
+
+  .rich-text p {
+    font-size: 17px;
+    line-height: 24px;
+    padding-bottom: 14px;
+  }
+
+  .back-to-top {
+    padding: 28px 0;
+  }
+
+  .back-to-top a {
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .site-footer {
+    padding: 28px 5%;
+  }
+
+
+  .lightbox figure {
+    padding: 50px 10px;
+  }
+}
+
+/* ---------- Phone ---------- */
+
+@media (max-width: 540px) {
+  .site-header {
+    height: 60px;
+  }
+
+  .close-responsive {
+    top: 30px;
+  }
+
+  .project-covers {
+    padding-top: 25px;
+  }
+
+  .project-cover {
+    width: 100%;
+  }
+
+  .project-cover .title {
+    font-size: 15px;
+    line-height: 18px;
+    padding-bottom: 7px;
+  }
+
+  .module.columns {
+    flex-direction: column;
+  }
+
+  .module.columns .column {
+    width: 100%;
+  }
+
+  .module.columns .module.image {
+    width: 100% !important;
+    padding-bottom: 16px;
+  }
+
+  .module.columns .module.text {
+    padding: 0;
+  }
+
+  .page-header {
+    padding-top: 33px;
+    padding-bottom: 25px;
+  }
+
+  .page-header h1 {
+    font-size: 29px;
+    line-height: 34px;
+    padding-bottom: 13px;
+  }
+
+  .page-header .description {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .module.image {
+    padding-bottom: 16px;
+  }
+
+  .module.text {
+    padding-top: 13px;
+    padding-bottom: 18px;
+  }
+
+  .rich-text p,
+  .rich-text.small p {
+    font-size: 14px;
+    line-height: 20px;
+    padding-bottom: 13px;
+  }
+
+  .rich-text p.lead {
+    font-size: 24px;
+    line-height: 1.1;
+  }
+
+  .back-to-top {
+    padding: 25px 0;
+  }
+
+  .back-to-top a {
+    line-height: 20px;
+  }
+
+  .site-footer {
+    padding: 25px 5%;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

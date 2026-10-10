@@ -1,0 +1,96 @@
+---
+import '@fontsource/roboto-slab/300.css';
+import '@fontsource/roboto-slab/500.css';
+import '@fontsource/roboto-slab/700.css';
+import '../styles/global.css';
+
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { NAV, SITE } from '../consts';
+import logo from '../assets/logo.png';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: ImageMetadata;
+}
+
+const { title, description = SITE.description, image } = Astro.props;
+const pageTitle = title ? `${SITE.title} - ${title}` : SITE.title;
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, ''), Astro.site);
+const ogImage = image ? await getImage({ src: image, width: 1200, format: 'jpg' }) : undefined;
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? !['/about-me', '/contact'].includes(path) : path === href);
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={SITE.keywords} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage.src, Astro.site)} />}
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo-container">
+        <a href="/" class="logo">
+          <img src={logo.src} width={logo.width} height={logo.height} alt="Virginia Ory — Illustrator" />
+        </a>
+        <button class="hamburger" type="button" aria-label="Open menu" aria-controls="responsive-nav" aria-expanded="false">
+          <i></i><i></i><i></i>
+        </button>
+      </div>
+      <nav class="nav" aria-label="Main">
+        {NAV.map((item) => <a href={item.href} class:list={{ active: isActive(item.href) }}>{item.label}</a>)}
+      </nav>
+    </header>
+
+    <div class="site-container">
+      <div class="site-content">
+        <main>
+          <slot />
+        </main>
+
+        <section class="back-to-top">
+          <a href="#"><span class="arrow">&uarr;</span>Back to Top</a>
+        </section>
+
+        <footer class="site-footer">
+          <div class="footer-text">© {new Date().getFullYear()} Virginia Ory</div>
+        </footer>
+      </div>
+    </div>
+
+    <div class="responsive-nav" id="responsive-nav" hidden>
+      <button class="close-responsive" type="button" aria-label="Close menu"></button>
+      <nav aria-label="Main">
+        {NAV.map((item) => <a href={item.href} class:list={{ active: isActive(item.href) }}>{item.label}</a>)}
+      </nav>
+    </div>
+
+    <script>
+      const menu = document.getElementById('responsive-nav')!;
+      const burger = document.querySelector<HTMLButtonElement>('.hamburger')!;
+      const toggle = (open: boolean) => {
+        menu.hidden = !open;
+        burger.setAttribute('aria-expanded', String(open));
+        document.documentElement.classList.toggle('show-responsive-nav', open);
+      };
+      burger.addEventListener('click', () => toggle(true));
+      menu.querySelector('.close-responsive')!.addEventListener('click', () => toggle(false));
+      document.addEventListener('keydown', (e) => e.key === 'Escape' && toggle(false));
+    </script>
+  </body>
+</html>

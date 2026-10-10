@@ -1,0 +1,93 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Blocks from '../components/Blocks.astro';
+import { SITE, WEB3FORMS_KEY } from '../consts';
+
+const page = (await getEntry('pages', 'contact'))!;
+const { title, description, blocks } = page.data;
+---
+
+<Base title={title}>
+  <section class="page">
+    <header class="page-header">
+      <h1>{title}</h1>
+      {description && <p class="description">{description}</p>}
+    </header>
+
+    <div class="module form" id="contact">
+      <form
+        class="contact-form"
+        method="post"
+        action="https://api.web3forms.com/submit"
+        data-key={WEB3FORMS_KEY}
+        data-email={SITE.email}
+      >
+        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+        <input type="hidden" name="subject" value="New message from virginiaory.com" />
+        <input type="hidden" name="from_name" value="virginiaory.com" />
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <div class="form-input">
+          <label for="name">Name *</label>
+          <input type="text" id="name" name="name" placeholder="Your Name..." autocomplete="name" required />
+        </div>
+        <div class="form-input">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="Your Email Address..." autocomplete="email" required />
+        </div>
+        <div class="form-input">
+          <label for="message">Message *</label>
+          <textarea id="message" name="message" placeholder="Your Message..." required></textarea>
+        </div>
+        <button type="submit" class="submit-button">Submit</button>
+        <p class="form-error" role="alert" hidden></p>
+      </form>
+
+      <div class="contact-form-sent" role="status" hidden>
+        Thank you!
+      </div>
+    </div>
+
+    <Blocks blocks={blocks} title={title} />
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('.contact-form')!;
+  const sent = document.querySelector<HTMLElement>('.contact-form-sent')!;
+  const error = form.querySelector<HTMLElement>('.form-error')!;
+  const button = form.querySelector<HTMLButtonElement>('.submit-button')!;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    error.hidden = true;
+    const data = new FormData(form);
+
+    // No form service configured: hand the message over to the mail app.
+    if (!form.dataset.key) {
+      const subject = encodeURIComponent(`Message from ${data.get('name') || data.get('email')}`);
+      const body = encodeURIComponent(`${data.get('message')}\n\n${data.get('name') ?? ''} <${data.get('email')}>`);
+      window.location.href = `mailto:${form.dataset.email}?subject=${subject}&body=${body}`;
+      return;
+    }
+
+    button.disabled = true;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: data,
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) throw new Error(json.message || res.statusText);
+      form.hidden = true;
+      sent.hidden = false;
+    } catch {
+      error.textContent = `Sorry, the message could not be sent. Please email ${form.dataset.email}.`;
+      error.hidden = false;
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>

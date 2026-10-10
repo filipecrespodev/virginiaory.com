@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Static site served by Cloudflare Workers (static assets only, no Worker code).
+  "name": "virginiaory-com",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // /ciclos -> ciclos.html; unknown paths -> 404.html
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

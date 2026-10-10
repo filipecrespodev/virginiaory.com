@@ -1,0 +1,24 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../layouts/Base.astro';
+import Blocks from '../components/Blocks.astro';
+import { getProjects } from '../lib/projects';
+
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { title, description, cover, blocks } = project.data;
+---
+
+<Base title={title} description={description || undefined} image={cover}>
+  <section class="page">
+    <header class="page-header">
+      <h1>{title}</h1>
+      {description && <p class="description">{description}</p>}
+    </header>
+    <Blocks blocks={blocks} title={title} />
+  </section>
+</Base>

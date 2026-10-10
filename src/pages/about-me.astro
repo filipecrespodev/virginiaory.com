@@ -1,0 +1,21 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Blocks from '../components/Blocks.astro';
+
+const page = (await getEntry('pages', 'about-me'))!;
+const { title, description, blocks } = page.data;
+const firstImage = blocks
+  .flatMap((b) => (b.type === 'columns' ? b.columns.flatMap((c) => c.blocks) : [b]))
+  .find((b) => b.type === 'image');
+---
+
+<Base title={title} image={firstImage?.src}>
+  <section class="page">
+    <header class="page-header">
+      <h1>{title}</h1>
+      {description && <p class="description">{description}</p>}
+    </header>
+    <Blocks blocks={blocks} title="Virginia Ory" />
+  </section>
+</Base>
